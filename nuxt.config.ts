@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@nuxt/fonts",
-    "@vesp/nuxt-fontawesome"
+    "@vesp/nuxt-fontawesome",
+    "nuxt-swiper",
   ]
 })

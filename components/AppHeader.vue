@@ -59,7 +59,7 @@ const closeExpand = () => {
 <template>
   <div
     id="nav"
-    class="container-fluid bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block"
+    class="container-fluid z-[9999] bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block"
   >
     <div class="container mx-auto hidden lg:flex justify-between py-4 px-5">
       <div>
@@ -246,7 +246,7 @@ const closeExpand = () => {
       </div>
     </div>
   </div>
-  <div id="navmobile" class="header-topnavigation-mobile container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
+  <div id="navmobile" class="header-topnavigation-mobile z-[9999] container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
     <div
       class="container mx-auto lg:hidden flex justify-end lg:justify-between px-5 menu-list"
     >

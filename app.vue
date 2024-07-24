@@ -1,8 +1,10 @@
 <template>
   <NuxtLayout>
     <AppHeader />
-    <div class="container-fluid main-container mx-auto lg:px-56 bg-black">
-      <NuxtPage />
+    <div class="container-fluid main-container bg-black">
+      <div class="container mx-auto px-5 py-5">
+        <NuxtPage />
+      </div>
     </div>
     <AppFooter />
   </NuxtLayout>
@@ -16,7 +18,6 @@
   }
 
   .main-container {
-    height: 100vh;
     min-height: calc(100svh - 124px - 208px);
   }
 </style>
