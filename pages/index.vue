@@ -1,9 +1,158 @@
+<template>
+  <div class="pb-24">
+    <div class="flex justify-between">
+      <h2 class="text-white text-2xl font-bold">คอนเสิร์ต</h2>
+      <div class="flex gap-3">
+        <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+            <font-awesome class="text-gray-500" :icon="faMagnifyingGlass" />
+          </div>
+          <input type="text" id="input-group-1" v-model="searchText" autocomplete="off"
+            class="bg-[rgba(62,62,62,0.5)] min-w-[330px] border text-white border-transparent text-xs rounded-3xl focus:ring-transparent focus:border-transparent block w-full ps-10 p-2.5"
+            placeholder="ค้นหาคอนเสิร์ตที่นี่" />
+          <div class="absolute inset-y-0 end-0 flex items-center pe-3.5" v-if="searchText"
+            @click="(searchText = ''), fetchProduct(true)">
+            <font-awesome class="cursor-pointer text-gray-200" :icon="faXmark" />
+          </div>
+        </div>
+        <button @click="fetchProduct(true)" type="button" :disabled="!searchText" :class="`cursor-pointer bg-[#e31f26] text-white h-full py-1 px-5 rounded-3xl text-xs ${searchText ? '' : 'opacity-70'
+          }`">
+          ค้นหา
+        </button>
+        <div class="flex items-center relative" @click="showModal()">
+          <img class="cursor-pointer w-[1.5rem] aspect-square" src="~/assets/icon-filter-1.svg" alt="" />
+          <span v-if="attributeValueIds.length"
+            class="bg-[#33FB21] w-[14px] h-[14px] rounded-[50%] text-xs flex absolute top-2 items-center justify-center">
+            {{ attributeValueIds.length }}
+          </span>
+        </div>
+        <div class="flex items-center">
+          <img class="cursor-pointer w-[1.5rem] aspect-square" src="~/assets/icon-marker.svg" alt="" />
+        </div>
+      </div>
+    </div>
+
+    <!-- popup filter attribute -->
+    <div id="app" class="h-full w-full flex items-center">
+      <transition name="fade">
+        <div v-show="show_modal" class="fixed inset-0 z-[300]">
+          <div v-show="show_modal" @click="showModal()"
+            class="bg-filter bg-black opacity-75 fixed inset-0 w-full h-full z-20"></div>
+          <main class="flex flex-col items-center justify-center h-full w-full relative">
+            <transition name="fade-up-down">
+              <div v-show="show_modal"
+                class="modal-wrapper w-full max-w-md mx-auto md:max-w-xl flex items-center z-[350] absolute top-12 border border-[#2e2e2e] rounded">
+                <div class="modal w-full bg-black max-h-screen shadow-lg flex-row rounded relative">
+                  <div
+                    class="modal-header p-5 bg-black text-gray-900 rounded-t border-b border-dotted border-[#3d3d3d]">
+                    <h5 class="text-white text-md font-bold uppercase select-none">
+                      ฟิลเตอร์
+                    </h5>
+                  </div>
+                  <div class="modal-body px-8 py-5 w-full h-full h-100">
+                    <div class="text-white text-sm font-extralight select-none">
+                      แนวเพลง
+                    </div>
+                    <div class="max-h-[58vh] h-100 overflow-y-auto text-white">
+                      <ul class="w-full text-sm font-medium text-white rounded-lg pl-0 pr-5">
+                        <li class="w-full" v-for="(attr, index) in attributeList.values" :key="index">
+                          <div class="flex items-center ps-3 relative">
+                            <label :for="`list-checkbox-attr-${index}`"
+                              class="cursor-pointer select-none checkbox-custom-label w-full py-3 ms-2 text-sm font-medium text-[#909090]">
+                              {{ attr.name.th }}
+                            </label>
+                            <input :id="`list-checkbox-attr-${index}`" type="checkbox" :value="attr.id"
+                              @change="changeAttribute(attr.id)" name="attr-checkbox"
+                              class="checkbox-custom select-none cursor-pointer w-6 h-6 border border-[#3d3d3d]" />
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="modal-footer pb-10 px-5 border0-t text-center">
+                    <button class="bg-[#e31f26] px-5 py-2 text-white w-[200px] rounded-3xl"
+                      @click="fetchProduct(true), showModal()">
+                      ใช้
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </transition>
+          </main>
+        </div>
+      </transition>
+    </div>
+
+    <!-- section banner -->
+    <div class="banner mt-5 border-dotted border-b border-[#3d3d3d]">
+      <BannerSlides :banners="banners" />
+    </div>
+
+    <!-- section recommend -->
+    <div class="recommend mt-5 border-dotted border-b border-[#3d3d3d]">
+      <h2 class="text-white text-2xl font-bold text-center">แนะนำสำหรับคุณ</h2>
+      <RecommendSlides :recommends="recommends" />
+    </div>
+
+    <!-- section category -->
+    <div class="category mt-5">
+      <div class="sm:px-1">
+        <ClientOnly>
+          <Swiper class="category-swiper mt-4 mb-10" :modules="[SwiperAutoplay, SwiperPagination]"
+            :space-between="20" :rewind="true" :breakpoints="{
+              1280: {
+                slidesPerView: 8,
+              },
+              1024: {
+                slidesPerView: 6,
+              },
+              720: {
+                slidesPerView: 4,
+              },
+              576: {
+                slidesPerView: 3,
+              },
+              375: {
+                slidesPerView: 2,
+              },
+            }">
+            <SwiperSlide :key="-1">
+              <div @click="(categoryId = ''), fetchProduct(true)" 
+                :class="`card rounded-3xl cursor-pointer flex items-center justify-center w-[120px] h-[45px] text-white ${!categoryId ? 'bg-[#e31f26]' : 'bg-[#121212]'}`"
+              >
+                ทั้งหมด
+              </div>
+            </SwiperSlide>
+            <SwiperSlide v-for="(slide, index) in categories" :key="index">
+              <div @click="(categoryId = slide.id.toString()), fetchProduct(true)" 
+                :class="`card rounded-3xl cursor-pointer flex items-center justify-center w-[120px] h-[45px] text-white 
+                ${categoryId === slide.id.toString()
+                  ? 'bg-[#e31f26]'
+                  : 'bg-[#121212]'
+                }`"
+              >
+                {{ slide.name.th }}
+              </div>
+            </SwiperSlide>
+          </Swiper>
+        </ClientOnly>
+      </div>
+    </div>
+
+    <!-- section concert list -->
+    <ProductList :concertList="concertList" :isLoading="isLoading" />
+  </div>
+</template>
+
 <script setup lang="ts">
 import {
-  faLocationDot,
-  faCalendarDays,
-  faClock,
+  faMagnifyingGlass,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
+
+import BannerSlides from '~/components/BannerSlides.vue';
+import RecommendSlides from '~/components/RecommendSlides.vue';
+import ProductList from '~/components/ProductList.vue';
 
 interface APIBody {
   data: {
@@ -20,58 +169,133 @@ const page = ref(1);
 const lastPage = ref(7);
 const isLoading = ref(false);
 
+const show_modal = ref<boolean>(false);
+
+// filter
+const searchText = ref<string>('');
+const attributeId = ref<string>('');
+const attributeValueIds = ref<Array<string>>([]);
+const categoryId = ref<string>('');
+
+// list display
+const attributeList = ref<any>([]);
 const banners = ref<any>([]);
-const recommend = ref<any>([]);
+const recommends = ref<any>([]);
 const categories = ref<any>([]);
 const concertList = ref<any>([]);
 
-const { data: bannerResult } = await useFetch<APIBody>(
-  'https://alpha-cdn.theconcert.com/v3/concerts/th/banner-home.json'
-);
-if (bannerResult.value) {
-  banners.value = bannerResult.value.data.record;
+const fetchAttribute = async () => {
+  const { data: attributeResult } = await useFetch<APIBody>(
+    'https://alpha-api.theconcert.com/attributes?code=genre&show_value=true&status=true&value_status=true'
+  );
+  if (attributeResult.value) {
+    attributeList.value = attributeResult.value.data.record[0];
+    attributeId.value = attributeList.value.id;
+  }
 }
 
-const { data: categoryResult } = await useFetch<APIBody>(
-  'https://alpha-api.theconcert.com/v2/concerts/categories?page=1'
-);
-if (categoryResult.value) {
-  categories.value = categoryResult.value.data.record;
+const fetchBanner = async () => {
+  const { data: bannerResult } = await useFetch<APIBody>(
+    'https://alpha-cdn.theconcert.com/v3/concerts/th/banner-home.json'
+  );
+  if (bannerResult.value) {
+    banners.value = bannerResult.value.data.record;
+  }
 }
 
-const { data: productResult } = await useFetch<APIBody>(
-  'https://alpha-api.theconcert.com/v3/products?limit=10&order=show_start&page=1&sort=asc&type=event'
-);
-if (productResult.value) {
-  page.value = productResult.value.data.pagination.current_page;
-  lastPage.value = productResult.value.data.pagination.last_page;
-  concertList.value = productResult.value.data.record;
+const fetchCategory = async () => {
+  const { data: categoryResult } = await useFetch<APIBody>(
+    'https://alpha-api.theconcert.com/v2/concerts/categories?page=1'
+  );
+  if (categoryResult.value) {
+    categories.value = categoryResult.value.data.record;
+  }
 }
 
-recommend.value = [
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/9bde3cae87f0ad11578552e1a6f8fad61/fb-wednesday(rock-pub).jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/e06f1375e4365ffe87931f49f1533a9c4/s__50495536.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/db9e571a70a10f7ef020ca4d117c6a6e2/bramble-cocktail-print.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/b86b532968c55c882b1a2af90360ea926/d935b99649a24def4081e414ea98e0eb.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/5fe74133816a8178d38899058bc69a8d1/100x-poster-724x1024.gif',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/554b7285c84af02d52c2c0aa0bb98ac7b/side-by-side-bright-win-concert-634f68b912a50-l.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/b3ba95f2b1f45aa5351c3e40e9781a34a/images.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/570593ab4331adc8f189780cfc277a424/6_600x800.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/1c848c0335581bac9cf1b3f874418aa76/600x800-01.jpg',
-  'https://alpha-res.theconcert.com/w_375,h_499,c_thumb/9f441eebe9b54c186bd2df6a5a870a096/final-2png-01.jpg',
-];
+const fetchRecommend = async () => {
+  const { data: recommendResult } = await useFetch<APIBody>(
+    'https://alpha-cdn.theconcert.com/v3/concerts/th/highlight.json'
+  );
+  if (recommendResult.value) {
+    recommends.value = recommendResult.value.data.record;
+  }
+}
 
-const loadMoreProduct = async () => {
+const fetchProductFirstTime = async () => {
+  const { data: productDefaultResult } = await useFetch<APIBody>(
+    'https://alpha-api.theconcert.com/v3/products?limit=10&order=show_start&page=1&sort=asc&type=event'
+  );
+  if (productDefaultResult.value) {
+    page.value = productDefaultResult.value.data.pagination.current_page;
+    lastPage.value = productDefaultResult.value.data.pagination.last_page;
+    concertList.value = productDefaultResult.value.data.record;
+  }
+}
+
+await Promise.all([
+  fetchAttribute(),
+  fetchBanner(),
+  fetchCategory(),
+  fetchRecommend(),
+  fetchProductFirstTime()
+])
+
+const showModal = () => {
+  if (show_modal.value) {
+    document
+      .getElementsByTagName('html')[0]
+      .classList.remove('overflow-y-hidden');
+    show_modal.value = false;
+  } else {
+    document.getElementsByTagName('html')[0].classList.add('overflow-y-hidden');
+    show_modal.value = true;
+  }
+};
+
+const fetchProduct = async (resetPage: boolean = false) => {
+  const params = {
+    limit: '10',
+    order: 'show_start',
+    sort: 'asc',
+    type: 'event',
+    page: resetPage ? '1' : page.value?.toString(),
+    attribute_id: attributeId.value,
+    attribute_value_ids: attributeValueIds.value.join(','),
+    q: searchText.value,
+    category_id: categoryId.value,
+  };
+
+  const searchParams = new URLSearchParams(params);
   const { data: productResult } = await $fetch<APIBody>(
-    `https://alpha-api.theconcert.com/v3/products?limit=10&order=show_start&page=${page.value}&sort=asc&type=event`
+    `https://alpha-api.theconcert.com/v3/products?${searchParams}`
   );
   if (productResult) {
     page.value = productResult.pagination.current_page;
     lastPage.value = productResult.pagination.last_page;
-    concertList.value.push(...productResult.record);
+    if (
+      resetPage &&
+      (searchText.value ||
+        attributeId.value ||
+        attributeValueIds.value ||
+        categoryId.value)
+    ) {
+      concertList.value = productResult.record;
+    } else {
+      concertList.value.push(...productResult.record);
+    }
   }
   await new Promise((re) => setTimeout(re, 2000));
   isLoading.value = false;
+};
+
+const changeAttribute = (_value: string) => {
+  if (attributeValueIds.value.includes(_value)) {
+    attributeValueIds.value = attributeValueIds.value.filter(
+      (el) => el !== _value
+    );
+  } else {
+    attributeValueIds.value.push(_value);
+  }
 };
 
 onMounted(() => {
@@ -84,267 +308,77 @@ onMounted(() => {
       page.value += 1;
       if (lastPage.value >= page.value) {
         isLoading.value = true;
-        await loadMoreProduct();
+        await fetchProduct();
       }
     }
   });
 });
 </script>
 
-<template>
-  <div class="pb-24">
-    <div class="flex justify-between">
-      <h2 class="text-white text-2xl font-bold">คอนเสิร์ต</h2>
-      <h5 class="text-white">ค้นหา</h5>
-    </div>
-
-    <!-- section banner -->
-    <div class="banner mt-5 border-dotted border-b border-[#3d3d3d] md:px-20">
-      <Swiper
-        class="banner-swiper mb-10"
-        :modules="[SwiperAutoplay, SwiperPagination]"
-        :slides-per-view="2"
-        :pagination="{
-          clickable: true,
-        }"
-        :space-between="20"
-        :loop="true"
-        :autoplay="{
-          delay: 1500,
-          disableOnInteraction: true,
-        }"
-      >
-        <SwiperSlide v-for="(slide, index) in banners" :key="index">
-          <div class="card w-full rounded-2xl overflow-hidden">
-            <img
-              class="w-full aspect-[2]"
-              :src="slide.images[0].url"
-              :alt="slide"
-            />
-          </div>
-        </SwiperSlide>
-      </Swiper>
-    </div>
-
-    <!-- section recommend -->
-    <div class="recommend mt-5 border-dotted border-b border-[#3d3d3d]">
-      <h2 class="text-white text-2xl font-bold text-center">แนะนำสำหรับคุณ</h2>
-      <ClientOnly>
-        <Swiper
-          class="recommend-swiper mt-4 mb-10"
-          :modules="[SwiperAutoplay, SwiperPagination]"
-          :slides-per-view="4"
-          :space-between="20"
-          :loop="true"
-          :autoplay="{
-            delay: 5000,
-            disableOnInteraction: true,
-          }"
-          :breakpoints="{
-            1024: {
-              slidesPerView: 4,
-            },
-            720: {
-              slidesPerView: 3,
-            },
-          }"
-        >
-          <SwiperSlide v-for="(slide, index) in recommend" :key="index">
-            <div class="card w-full rounded-2xl overflow-hidden">
-              <img class="w-full aspect-[268/357]" :src="slide" :alt="slide" />
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </ClientOnly>
-    </div>
-
-    <!-- section category -->
-    <div class="category mt-5">
-      <div class="sm:px-10">
-        <ClientOnly>
-          <Swiper
-            class="category-swiper mt-4 mb-10"
-            :modules="[SwiperAutoplay, SwiperPagination]"
-            :space-between="20"
-            :rewind="true"
-            :breakpoints="{
-              1280: {
-                slidesPerView: 8,
-              },
-              1024: {
-                slidesPerView: 6,
-              },
-              720: {
-                slidesPerView: 4,
-              },
-              576: {
-                slidesPerView: 3,
-              },
-              375: {
-                slidesPerView: 2,
-              },
-            }"
-          >
-            <SwiperSlide :key="-1">
-              <div
-                class="card rounded-3xl cursor-pointer flex items-center justify-center text-white bg-[#e31f26] w-[120px] h-[45px]"
-              >
-                ทั้งหมด
-              </div>
-            </SwiperSlide>
-            <SwiperSlide v-for="(slide, index) in categories" :key="index">
-              <div
-                class="card rounded-3xl cursor-pointer flex items-center justify-center text-white bg-[#121212] w-[120px] h-[45px]"
-              >
-                {{ slide.name.th }}
-              </div>
-            </SwiperSlide>
-          </Swiper>
-        </ClientOnly>
-      </div>
-    </div>
-
-    <!-- section concert list -->
-    <div class="flex flex-wrap gap-y-5 mt-10">
-      <div
-        class="px-2 w-full md:w-1/2 lg:w-1/3"
-        v-for="(concert, index) in concertList"
-        :key="index"
-      >
-        <div
-          class="card flex gap-3 overflow-hidden rounded-2xl bg-[#1B181A] p-3"
-        >
-          <figure class="m-0 p-0 w-2/5 flex-shrink-0">
-            <img
-              class="aspect-[144/193] h-full rounded-2xl"
-              :src="`https://alpha-res.theconcert.com/w_450,h_600,c_thumb/${concert.images[0].id}/${concert.images[0].name}`"
-              alt=""
-            />
-          </figure>
-          <div class="w-3/5 text-white">
-            <h4
-              class="text-xl md:text-md lg:text-sm 2xl:text-lg font-medium lg:h-[40px] 2xl:h-[55px] title-2lines mb-2 2xl:mb-3"
-            >
-              {{ concert?.name.th }}
-            </h4>
-            <div
-              class="text-lg md:text-xs 2xl:text-sm mb-1 font-medium text-[#33fb21]"
-            >
-              <font-awesome class="mr-1" :icon="faCalendarDays" />
-              {{ concert?.show_time.text_short_date }}
-            </div>
-            <div
-              class="text-lg md:text-xs 2xl:text-sm mb-1 font-medium text-[#33fb21]"
-            >
-              <font-awesome class="mr-1" :icon="faClock" />
-              {{ concert?.show_time.text_short?.split(', ')[1] }}
-            </div>
-            <div
-              class="text-lg md:text-xs 2xl:text-sm font-medium text-[#2bbfff] title-1lines"
-            >
-              <font-awesome class="mr-1" :icon="faLocationDot" />
-              {{ concert?.venue.name.th }}
-            </div>
-            <hr
-              class="border-dotted border-0 border-b border-[#3d3d3d] my-5 md:my-2 lg:my-2 xl:my-4"
-            />
-
-            <button
-              type="button"
-              class="bg-[#e31f26] py-2 px-4 rounded-3xl font-bold text-lg md:text-sm"
-            >
-              ซื้อบัตร
-            </button>
-          </div>
-        </div>
-      </div>
-      <div
-        v-if="isLoading"
-        role="status"
-        class="px-2 w-full md:w-1/2 lg:w-1/3 animate-pulse"
-      >
-        <div
-          class="card flex gap-3 overflow-hidden rounded-2xl bg-[#1B181A] p-3"
-        >
-          <div
-            class="flex items-center justify-center w-2/5 flex-shrink-0 h-full bg-gray-600 rounded-2xl"
-          >
-            <div
-              class="flex items-center justify-center w-full h-full aspect-[144/193]"
-            >
-              <svg
-                class="w-10 h-10 text-gray-500"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 18"
-              >
-                <path
-                  d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"
-                />
-              </svg>
-            </div>
-          </div>
-          <div class="w-3/5 text-white">
-            <div class="h-2.5 bg-gray-600 rounded-full w-full mb-2"></div>
-            <div class="h-2.5 bg-gray-600 rounded-full w-full mb-2"></div>
-            <div class="h-2 bg-gray-600 rounded-full mt-5"></div>
-            <div class="h-2 bg-gray-600 rounded-full mt-2"></div>
-            <div class="h-2 bg-gray-600 rounded-full mt-2"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="-loading text-center flex justify-center" v-if="isLoading">
-      <img
-        src="~/assets/icon-loading.webp"
-        class="_loading-img max-w-[160px]"
-      />
-    </div>
-  </div>
-</template>
-
 <style lang="css">
-.title-1lines {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.title-2lines {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.banner-swiper {
-  .swiper-pagination {
-    position: unset;
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-    .swiper-pagination-bullet {
-      pointer-events: auto;
-      caret-color: transparent;
-      background-color: white;
-      opacity: 0.4;
-    }
-    .swiper-pagination-bullet.swiper-pagination-bullet-active {
-      opacity: 0.75;
-    }
-  }
+/* animation for vue transition tag */
+
+.fade-up-down-enter-active {
+  transition: all 0.5s ease-in-out;
 }
 
-.recommend-swiper {
-  .swiper-slide {
-    width: 268px !important;
-    @media screen and (max-width: 768px) {
-      width: 200px !important;
-    }
-    @media screen and (max-width: 640px) {
-      width: 150px !important;
-    }
-  }
+.fade-up-down-leave-active {
+  transition: all 0.5s ease-in-out;
+}
+
+.fade-up-down-enter {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
+.fade-up-down-leave-to {
+  transform: translateY(-100px);
+  opacity: 0;
+}
+
+.fade-enter-active {
+  -webkit-transition: opacity 0.5s;
+  transition: opacity 0.5s;
+}
+
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+[type='checkbox'] {
+  background-color: transparent;
+  position: relative;
+  border-radius: 50%;
+}
+
+[type='checkbox']:after {
+  content: '';
+  position: absolute;
+}
+
+[type='checkbox']:checked:after {
+  left: 8px;
+  top: 3px;
+  width: 7px;
+  height: 13px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+[type='checkbox']:checked {
+  background-image: none !important;
+  color: #11b602;
+}
+
+[type='checkbox']:focus,
+[type='checkbox']:focus {
+  box-shadow: none !important;
 }
 </style>

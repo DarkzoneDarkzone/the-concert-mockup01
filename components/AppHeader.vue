@@ -1,67 +1,9 @@
-<script setup>
-import {
-  faCoins,
-  faAngleDown,
-  faBars,
-  faBell,
-  faPersonWalkingLuggage,
-  faTicket,
-} from '@fortawesome/free-solid-svg-icons';
-
-import { onMounted } from 'vue';
-
-onMounted(() => {
-  window.addEventListener('scroll', function () {
-    var navbar = document.getElementById('nav');
-    var navbarMobile = document.getElementById('navmobile');
-    var nav_classes = navbar.classList;
-    var nav_classes_mobile = navbarMobile.classList;
-
-    // desktop
-    if (document.documentElement.scrollTop >= 60) {
-      if (nav_classes.contains('scrolled') === false) {
-        nav_classes.toggle('scrolled');
-      }
-    } else {
-      if (nav_classes.contains('scrolled') === true) {
-        nav_classes.toggle('scrolled');
-      }
-    }
-    // mobile
-    if (document.documentElement.scrollTop >= 38) {
-      if (nav_classes_mobile.contains('scrolled') === false) {
-        nav_classes_mobile.toggle('scrolled');
-      }
-    } else {
-      if (nav_classes_mobile.contains('scrolled') === true) {
-        nav_classes_mobile.toggle('scrolled');
-      }
-    }
-  });
-});
-
-const expand = () => {
-  const dropdown = document.querySelector('#dropdown-expand');
-  if (dropdown) {
-    dropdown.style.display =
-      dropdown.style.display === 'block' ? 'none' : 'block';
-  }
-};
-
-const closeExpand = () => {
-  const dropdown = document.querySelector('#dropdown-expand');
-  if (dropdown) {
-    dropdown.style.display = 'none';
-  }
-};
-</script>
-
 <template>
   <div
     id="nav"
-    class="container-fluid z-[9999] bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block"
+    class="container-fluid z-[200] bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block"
   >
-    <div class="container mx-auto hidden lg:flex justify-between py-4 px-5">
+    <div class="container mx-auto hidden lg:flex justify-between py-4 px-5 lg:px-0">
       <div>
         <a href="#"><img src="~/assets/tcc-main-logo.svg" loading="lazy" /></a>
       </div>
@@ -157,7 +99,7 @@ const closeExpand = () => {
       </div>
     </div>
     <div
-      class="container mx-auto hidden lg:flex justify-end lg:justify-between pt-3 px-5 menu-list"
+      class="container mx-auto hidden lg:flex justify-end lg:justify-between pt-3 px-5 lg:px-0 menu-list"
     >
       <ul class="flex gap-5 h-fit">
         <li class="text-md">
@@ -246,7 +188,7 @@ const closeExpand = () => {
       </div>
     </div>
   </div>
-  <div id="navmobile" class="header-topnavigation-mobile z-[9999] container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
+  <div id="navmobile" class="header-topnavigation-mobile z-[200] container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
     <div
       class="container mx-auto lg:hidden flex justify-end lg:justify-between px-5 menu-list"
     >
@@ -285,6 +227,64 @@ const closeExpand = () => {
     </div>
   </div>
 </template>
+
+<script setup>
+import {
+  faCoins,
+  faAngleDown,
+  faBars,
+  faBell,
+  faPersonWalkingLuggage,
+  faTicket,
+} from '@fortawesome/free-solid-svg-icons';
+
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  window.addEventListener('scroll', function () {
+    var navbar = document.getElementById('nav');
+    var navbarMobile = document.getElementById('navmobile');
+    var nav_classes = navbar.classList;
+    var nav_classes_mobile = navbarMobile.classList;
+
+    // desktop
+    if (document.documentElement.scrollTop >= 60) {
+      if (nav_classes.contains('scrolled') === false) {
+        nav_classes.toggle('scrolled');
+      }
+    } else {
+      if (nav_classes.contains('scrolled') === true) {
+        nav_classes.toggle('scrolled');
+      }
+    }
+    // mobile
+    if (document.documentElement.scrollTop >= 38) {
+      if (nav_classes_mobile.contains('scrolled') === false) {
+        nav_classes_mobile.toggle('scrolled');
+      }
+    } else {
+      if (nav_classes_mobile.contains('scrolled') === true) {
+        nav_classes_mobile.toggle('scrolled');
+      }
+    }
+  });
+});
+
+const expand = () => {
+  const dropdown = document.querySelector('#dropdown-expand');
+  if (dropdown) {
+    dropdown.style.display =
+      dropdown.style.display === 'block' ? 'none' : 'block';
+  }
+};
+
+const closeExpand = () => {
+  const dropdown = document.querySelector('#dropdown-expand');
+  if (dropdown) {
+    dropdown.style.display = 'none';
+  }
+};
+</script>
 
 <style lang="css">
 .header-topnavigation {
