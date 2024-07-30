@@ -1,5 +1,5 @@
 <template>
-  <Swiper class="banner-swiper mb-5 sm:mb-10" :modules="[SwiperAutoplay, SwiperPagination]" :slides-per-view="2"
+  <Swiper class="banner-swiper mb-5" :modules="[SwiperAutoplay, SwiperPagination]" :slides-per-view="2"
     :pagination="{
       clickable: true,
     }"

@@ -1,177 +1,121 @@
 <template>
-  <div
-    id="nav"
-    class="container-fluid z-[200] bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block"
-  >
+  <div id="nav"
+    class="container-fluid z-[200] bg-black border-dotted border-b border-[#3d3d3d] header-topnavigation w-full sticky hidden lg:block">
     <div class="container mx-auto hidden lg:flex justify-between py-4 px-5 lg:px-0">
       <div>
         <a href="#"><img src="~/assets/tcc-main-logo.svg" loading="lazy" /></a>
       </div>
       <div class="flex justify-content-end">
         <div class="shortcut-service flex gap-4">
-          <img
-            src="~/assets/sell-ticket-th.svg"
-            loading="lazy"
-            class="cursor-pointer h-[27px]"
-          />
-          <img
-            src="~/assets/ticket-agent-th.svg"
-            loading="lazy"
-            class="cursor-pointer h-[27px]"
-          />
-          <img
-            src="~/assets/create-page-th.svg"
-            loading="lazy"
-            class="cursor-pointer h-[27px]"
-          />
+          <img src="~/assets/sell-ticket-th.svg" loading="lazy" class="cursor-pointer h-[27px]" />
+          <img src="~/assets/ticket-agent-th.svg" loading="lazy" class="cursor-pointer h-[27px]" />
+          <img src="~/assets/create-page-th.svg" loading="lazy" class="cursor-pointer h-[27px]" />
         </div>
         <div class="flex items-center h-fit mt-2 ml-5">
           <div class="currency-box flex items-center">
-            <div
-              id="change_lang_currency"
-              data-toggle="dropdown"
-              aria-haspopup="false"
-              aria-expanded="false"
-              class="dropdown show px-2"
-            >
-              <button
-                class="dropbtn ripple active p-0 text-white text-sm h-[24px]"
-              >
+            <div id="change_lang_currency" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false"
+              class="dropdown show px-2">
+              <button class="dropbtn ripple active p-0 text-white text-sm h-[24px]">
                 <font-awesome class="mr-1" :icon="faCoins" />
                 ฿ THB
                 <font-awesome class="ml-2" :icon="faAngleDown" />
               </button>
-              <div
-                id="dropdown-menu-c"
-                aria-labelledby="dropdown_currency"
-                class="dropdown-content text-white"
-              >
-                <a
-                  href="#"
-                  class="dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm"
-                >
+              <div id="dropdown-menu-c" aria-labelledby="dropdown_currency" class="dropdown-content text-white">
+                <a href="#"
+                  class="dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm">
                   $ USD
                 </a>
               </div>
             </div>
           </div>
-          <div
-            data-toggle="dropdown"
-            aria-haspopup="false"
-            aria-expanded="false"
-            class="dropdown show px-2"
-          >
-            <button
-              class="dropbtn flex items-center gap-2 ripple active pa-0 text-white text-sm h-[24px]"
-            >
+          <div data-toggle="dropdown" aria-haspopup="false" aria-expanded="false" class="dropdown show px-2">
+            <button class="dropbtn flex items-center gap-2 ripple active pa-0 text-white text-sm h-[24px]">
               <img class="w-[15px] h-[15px]" src="~/assets/th.png" />TH
               <font-awesome :icon="faAngleDown" />
             </button>
-            <div
-              id="dropdown-menu-lang"
-              aria-labelledby="dropdownlang"
-              class="dropdown-content"
-            >
-              <a
-                href="#"
-                class="flex gap-2 items-center dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm"
-              >
+            <div id="dropdown-menu-lang" aria-labelledby="dropdownlang" class="dropdown-content">
+              <a href="#"
+                class="flex gap-2 items-center dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm">
                 <img class="w-[15px] h-[15px]" src="~/assets/en.png" />EN
               </a>
-              <a
-                href="#"
-                class="flex gap-2 items-center dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm"
-              >
+              <a href="#"
+                class="flex gap-2 items-center dropdown-item text-[white] hover:text-[#e31f26] bg-[#121212] hover:bg-[#121212] text-sm">
                 <img class="w-[15px] h-[15px]" src="~/assets/zh.png" />CN
               </a>
             </div>
           </div>
           <div class="px-2">
-            <img
-              src="~/assets/_icon-helpcenter.svg"
-              loading="lazy"
-              width="20"
-              height="20"
-              class="cursor-pointer"
-            />
+            <img src="~/assets/_icon-helpcenter.svg" loading="lazy" width="20" height="20" class="cursor-pointer" />
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="container mx-auto hidden lg:flex justify-end lg:justify-between pt-3 px-5 lg:px-0 menu-list"
-    >
+    <div class="container mx-auto hidden lg:flex justify-end lg:justify-between pt-3 px-5 lg:px-0 menu-list">
       <ul class="flex gap-5 h-fit">
-        <li class="text-md">
-          <a href="javascript:void(0)">หน้าแรก</a>
-        </li>
-        <li class="text-md active">
-          <a href="javascript:void(0)">คอนเสิร์ต</a>
-        </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">ไนต์คลับ </a>
-        </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">ศิลปิน</a>
-        </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">โปรโมชัน</a>
-        </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">สินค้า</a>
-        </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">ข่าวสาร</a>
-        </li>
+        <NuxtLink to="/" exact exact-active-class="active">
+          <li class="text-md">หน้าแรก</li>
+        </NuxtLink>
+        <NuxtLink to="/concert" exact exact-active-class="active">
+          <li class="text-md">คอนเสิร์ต</li>
+        </NuxtLink>
+        <NuxtLink to="/nightclub" exact exact-active-class="active">
+          <li class="text-md">ไนต์คลับ</li>
+        </NuxtLink>
+        <NuxtLink to="/artist" exact exact-active-class="active">
+          <li class="text-md">ศิลปิน</li>
+        </NuxtLink>
+        <NuxtLink to="/voucher" exact exact-active-class="active">
+          <li class="text-md">โปรโมชัน</li>
+        </NuxtLink>
+        <NuxtLink to="/merchandise" exact exact-active-class="active">
+          <li class="text-md">สินค้า</li>
+        </NuxtLink>
+        <NuxtLink to="/article" exact exact-active-class="active">
+          <li class="text-md">ข่าวสาร</li>
+        </NuxtLink>
         <li class="text-md relative">
-          <a
-            href="#"
-            class="msg-trigger-btn"
-            @click="expand()"
-            @focusout="closeExpand()"
-          >
+           <!-- @focusout="closeExpand()" -->
+          <a href="#" class="msg-trigger-btn" @click="expand()">
             ลูกค้าธุรกิจ
             <font-awesome :icon="faAngleDown" />
           </a>
           <div id="dropdown-expand" class="message-dropdown absolute">
             <ul class="dropdown-msg-list">
               <li class="msg-list-item d-flex">
-                <a href="javascript:void(0)" class="dropdown-item text-sm">
-                  <i class="las la-clipboard-check"></i>&nbsp; บริการของเรา
+                <a href="/organizer/overview" class="dropdown-item text-sm">
+                  <i class="las la-clipboard-check"></i>&nbsp;
+                  บริการของเรา
                 </a>
               </li>
               <li class="msg-list-item d-flex">
-                <a href="javascript:void(0)" class="dropdown-item text-sm">
-                  <i class="las la-credit-card"></i>&nbsp; ค่าบริการ
+                <a href="/organizer/pricing" class="dropdown-item text-sm">
+                  <i class="las la-credit-card"></i>&nbsp;
+                  ค่าบริการ
                 </a>
               </li>
               <li class="msg-list-item d-flex">
-                <a href="javascript:void(0)" class="dropdown-item text-sm"
-                  ><i class="las la-user-cog"></i>&nbsp; บัญชีธุรกิจ
+                <a href="/organizer/overview" class="dropdown-item text-sm">
+                  <i class="las la-user-cog"></i>&nbsp;
+                  บัญชีธุรกิจ
                 </a>
               </li>
             </ul>
           </div>
         </li>
-        <li class="text-md">
-          <a href="javascript:void(0)">บริการคุ้มครองตั๋วการแสดง</a>
-        </li>
+        <NuxtLink to="/ticketshield" exact exact-active-class="active">
+          <li class="text-md">
+            บริการคุ้มครองตั๋วการแสดง
+          </li>
+        </NuxtLink>
       </ul>
       <div id="shortcut_bar" class="shortcut-bar flex gap-3">
         <div class="short-profile">
           <div class="short-profile flex items-center">
             <!-- <font-awesome :icon="faBars" class="text-2xl text-[white] lg:hidden block mr-2" /> -->
             <div class="avatar mr-2">
-              <img
-                class="w-[20px] h-[20px]"
-                src="~/assets/profile-pic-default@2x.png"
-                loading="lazy"
-              />
+              <img class="w-[20px] h-[20px]" src="~/assets/profile-pic-default@2x.png" loading="lazy" />
             </div>
-            <div
-              id="_open-panel"
-              class="cursor-pointer -display-name text-[white]"
-            >
+            <div id="_open-panel" class="cursor-pointer -display-name text-[white]">
               flk
             </div>
           </div>
@@ -188,28 +132,17 @@
       </div>
     </div>
   </div>
-  <div id="navmobile" class="header-topnavigation-mobile z-[200] container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
-    <div
-      class="container mx-auto lg:hidden flex justify-end lg:justify-between px-5 menu-list"
-    >
+  <div id="navmobile"
+    class="header-topnavigation-mobile z-[200] container-fluid bg-black border-dotted border-b border-[#3d3d3d] w-full sticky lg:hidden flex items-center">
+    <div class="container mx-auto lg:hidden flex justify-end lg:justify-between px-5 menu-list">
       <div id="shortcut_bar" class="shortcut-bar flex gap-3">
         <div class="short-profile">
           <div class="short-profile flex items-center">
-            <font-awesome
-              :icon="faBars"
-              class="text-2xl text-[white] lg:hidden block mr-2"
-            />
+            <font-awesome :icon="faBars" class="text-2xl text-[white] lg:hidden block mr-2" />
             <div class="avatar mr-2">
-              <img
-                class="w-[20px] h-[20px]"
-                src="~/assets/profile-pic-default@2x.png"
-                loading="lazy"
-              />
+              <img class="w-[20px] h-[20px]" src="~/assets/profile-pic-default@2x.png" loading="lazy" />
             </div>
-            <div
-              id="_open-panel"
-              class="cursor-pointer -display-name text-[white]"
-            >
+            <div id="_open-panel" class="cursor-pointer -display-name text-[white]">
               flk
             </div>
           </div>
@@ -343,6 +276,7 @@ const closeExpand = () => {
   0% {
     background: rgba(218, 53, 52, 0.2);
   }
+
   100% {
     background: transparent;
   }
@@ -353,7 +287,7 @@ const closeExpand = () => {
   padding: 0.1rem 0rem;
 }
 
-.menu-list ul li.active {
+.menu-list ul .active {
   background-color: #e31f26;
   border-radius: 15px;
   padding: 0.1rem 1rem;

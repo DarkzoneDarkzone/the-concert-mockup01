@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout>
     <AppHeader />
-    <div class="container-fluid main-container bg-black">
+    <div class="container-fluid main-container bg-black text-white">
       <div class="container mx-auto px-5 lg:px-0 py-5">
         <NuxtPage />
       </div>
