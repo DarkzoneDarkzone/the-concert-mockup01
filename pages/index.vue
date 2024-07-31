@@ -43,8 +43,7 @@
       <div class="flex flex-wrap">
         <div v-for="item in vouchers" class="box-pro w-1/3 px-2 h-[140px] flex gap-4 items-center">
           <div class="w-[106px] h-[106px] ml-3 flex-shrink-0">
-            <img
-              class="w-full h-full rounded-2xl"
+            <img class="w-full h-full rounded-2xl"
               :src="`https://alpha-res.theconcert.com/w_450,h_600,c_thumb/${item.images[0].id}/${item.images[0].name}`"
               loading="lazy">
           </div>
@@ -78,11 +77,28 @@
         </NuxtLink>
       </div>
     </div>
+
+    <section>
+      <div :class="`modal ${showPopup ? 'show' : ''}`">
+        <div class="model__content">
+          <div class="modal__detail w-[375px] p-4 relative" v-if="popup">
+            <img class="rounded-xl" :src="`https://alpha-res.theconcert.com/w_450,h_600,c_thumb/${popup.images[0].id}/${popup.images[0].name}`" alt="">
+            <div class="text-center px-5 w-[120px] py-2 bg-[#e31f26] text-white text-xs border-2 border-black rounded-3xl font-bold absolute bottom-0 left-0 right-0 mx-auto">
+              Buy Now
+            </div>
+          </div>
+        </div>
+        <div data-dismiss="modal" class="close justify-center items-center flex" @click="showPopup = false">
+          <font-awesome class="text-[20px]" :icon="faX" />
+        </div>
+      </div>
+      <div class="overlay" @click="showPopup = false"></div>
+    </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { faChevronRight, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faChevronRight, faLocationDot, faX } from '@fortawesome/free-solid-svg-icons';
 
 import BannerSlides from '~/components/BannerSlides.vue';
 import RecommendSlides from '~/components/RecommendSlides.vue';
@@ -102,6 +118,9 @@ interface APIBody {
 const recommends = ref<any>([]);
 const banners = ref<any>([]);
 const vouchers = ref<any>([]);
+const popups = ref<any>([]);
+const popup = ref<any>(null);
+const showPopup = ref<boolean>(false);
 
 const fetchRecommend = async () => {
   const { data: recommendResult } = await useFetch<APIBody>(
@@ -130,11 +149,40 @@ const fetchVoucher = async () => {
   }
 }
 
+const fetchPopup = async () => {
+  const { data: popupResult } = await useFetch<APIBody>(
+    'https://alpha-cdn.theconcert.com/v3/concerts/en/popup.json'
+  );
+  if (popupResult.value) {
+    popups.value = popupResult.value.data.record;
+  }
+}
+
 await Promise.all([
   fetchRecommend(),
   fetchBanner(),
   fetchVoucher(),
+  fetchPopup()
 ])
+
+onMounted(() => {
+  let popupId = null
+  for (const value of popups.value) {
+    const popupCookie = useCookie(`popup-${value.id}`, { maxAge: 60 * 60 * 24})
+    if (!popupCookie.value) {
+      popupId = value.id
+      popupCookie.value = 'true'
+      break
+    }
+  }
+  if (popupId) {
+    const popupFinded = popups.value.find((el: any) => el.id === popupId)
+    if (popupFinded) {
+      popup.value = popupFinded
+      showPopup.value = true
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -145,5 +193,71 @@ await Promise.all([
   background-size: 100%;
   border-radius: 15px;
   padding: 0.8em;
+}
+</style>
+
+<style lang="scss">
+.overlay {
+  background-color: #000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.modal {
+  border-radius: 15px;
+  width: 100%;
+  max-width: fit-content;
+  padding-bottom: 20px;
+  height: fit-content;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  -webkit-transform: translateY(-50px);
+  transform: translateY(-50px);
+  z-index: 250;
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.15s ease-out, opacity 0.3s ease-out;
+  transition-delay: 0.1s;
+  &.show {
+    pointer-events: auto;
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transition-delay: 0.2s;
+  }
+
+  .close {
+    right: 0;
+    position: absolute;
+    font-size: 26px;
+    color: #fff;
+    z-index: 2;
+    border-radius: 50%;
+    background: #212121;
+    padding: 5px;
+    left: 0;
+    bottom: -40px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    margin: 0 auto;
+    border: #fff solid 1.5px;
+    cursor: pointer;
+  }
+}
+.modal.show ~ .overlay {
+  pointer-events: auto;
+  opacity: 0.75;
 }
 </style>

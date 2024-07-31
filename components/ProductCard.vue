@@ -1,5 +1,5 @@
 <template>
-  <div class="card flex gap-3 overflow-hidden rounded-2xl bg-[#1B181A] p-3">
+  <div class="card flex gap-3 cursor-pointer overflow-hidden rounded-2xl bg-[#1B181A] p-3" @click="navigateTo(`/concert/${concert.id}`)" >
     <figure class="m-0 p-0 w-2/5 flex-shrink-0">
       <img class="aspect-[144/193] h-full rounded-2xl"
         :src="`https://alpha-res.theconcert.com/w_450,h_600,c_thumb/${concert.images[0].id}/${concert.images[0].name}`"
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   faLocationDot,
   faCalendarDays,
@@ -48,4 +48,5 @@ const props = defineProps({
     required: true,
   }
 });
+
 </script>

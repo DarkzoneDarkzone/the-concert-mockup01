@@ -74,7 +74,6 @@
           <li class="text-md">ข่าวสาร</li>
         </NuxtLink>
         <li class="text-md relative">
-           <!-- @focusout="closeExpand()" -->
           <a href="#" class="msg-trigger-btn" @click="expand()">
             ลูกค้าธุรกิจ
             <font-awesome :icon="faAngleDown" />

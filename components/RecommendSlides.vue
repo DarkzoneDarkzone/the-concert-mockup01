@@ -20,7 +20,7 @@
         },
       }">
       <SwiperSlide v-for="(slide, index) in recommends" :key="index">
-        <div class="card w-full rounded-2xl overflow-hidden">
+        <div class="card w-full cursor-pointer rounded-2xl overflow-hidden" @click="navigateTo(`/concert/${slide.id}`)" >
           <img class="w-full rounded-2xl aspect-[268/357]"
             :src="`https://alpha-res.theconcert.com/w_450,h_600,c_thumb/${slide.images[0].id}/${slide.images[0].name}`"
             :alt="slide" />

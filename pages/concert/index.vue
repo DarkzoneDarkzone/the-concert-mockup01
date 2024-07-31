@@ -145,6 +145,7 @@
 </template>
 
 <script setup lang="ts">
+import { type APIBody } from '@/types/ApiResponse'
 import {
   faMagnifyingGlass,
   faXmark,
@@ -153,18 +154,6 @@ import {
 import BannerSlides from '~/components/BannerSlides.vue';
 import RecommendSlides from '~/components/RecommendSlides.vue';
 import ProductList from '~/components/ProductList.vue';
-
-interface APIBody {
-  data: {
-    pagination: {
-      current_page: number;
-      last_page: number;
-      limit: number;
-      total: number;
-    };
-    record: Array<any>;
-  };
-}
 
 const page = ref(1);
 const lastPage = ref(7);

@@ -20,7 +20,7 @@
     :centered-slides="true"
   >
     <SwiperSlide v-for="(slide, index) in banners" :key="index">
-      <div class="card w-full rounded-lg sm:rounded-2xl overflow-hidden">
+      <div class="card w-full cursor-pointer rounded-lg sm:rounded-2xl overflow-hidden" @click="navigateTo(`/concert/${getProductId(slide.fields)}`)">
         <img class="w-full aspect-[2]" :src="slide.images[0].url" :alt="slide" />
       </div>
     </SwiperSlide>
@@ -35,6 +35,14 @@ const props = defineProps({
   },
 });
 const { banners } = props;
+
+const getProductId = (_fields) => {
+  const prod = _fields.find(el => el.name === 'data_id')
+  if (prod) {
+    return prod.lang
+  }
+  return 0
+}
 </script>
 
 <style lang="css">
